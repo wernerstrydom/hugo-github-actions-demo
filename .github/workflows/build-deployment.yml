@@ -3,6 +3,13 @@ on:
   push:
     branches:    
       - main
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 defaults:
   run:
     shell: bash
@@ -11,10 +18,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v2
       - name: Install Hugo
         run: sudo snap install hugo
       - name: Get Hugo Version
         run: hugo version
       - name: Build Site
+        env:
+          HUGO_ENVIRONMENT: production
+          HUGO_ENV: production
         run: hugo --destination ../dist --minify --cleanDestinationDir --enableGitInfo
         working-directory: src
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./dist
