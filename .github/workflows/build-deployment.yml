@@ -30,8 +30,7 @@ jobs:
         env:
           HUGO_ENVIRONMENT: production
           HUGO_ENV: production
-        run: hugo --destination ../dist --minify --cleanDestinationDir --enableGitInfo
-        working-directory: src
+        run: hugo --destination ../dist --source ./src --verbose
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
